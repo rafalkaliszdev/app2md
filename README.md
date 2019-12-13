@@ -16,4 +16,10 @@
 1. i've tried to keep this app minimalistic (no need for n-tier layered architecture, only 1 .csproj)
 
 ## honest criticism
-1. "database" implementation is not best 
+1. "database" implementation is not best (minimalistic)
+2. no services real services
+3. no dependency injection in services 
+4. no logging (especially events or errors)
+5. remote validation could be done in real (not dummy) use case
+6. no stored procedure
+7. 

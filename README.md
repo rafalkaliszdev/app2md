@@ -8,6 +8,12 @@
 1. download repository from https://github.com/rafalkaliszdev/app2md
 2. launch visual studio 2019 3. in file “appsettings.json” you need to provide all credentials for MailClient
 4. compile and run solution on debug mode (best for code review)
-5. complete form (see how validation works on different fields)
-6. on submit, form should send mail and create new record in database
+5. complete form (see how validation works on different field types: plain string, email, phone +extra for )
+5a. try to type letters 'x' or 'v' for first/last name (example of remote specific validation)
+6. on submit, form should send mail, create new record in database and return view 'thank you' with record id
 
+## remarks
+1. i've tried to keep this app minimalistic (no need for n-tier layered architecture, only 1 .csproj)
+
+## honest criticism
+1. "database" implementation is not best 

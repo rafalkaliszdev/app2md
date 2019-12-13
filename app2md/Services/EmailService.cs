@@ -36,7 +36,7 @@ namespace app2md.Services
             }
             catch
             {
-                throw;
+                throw; // here should be logger
             }
         }
     }

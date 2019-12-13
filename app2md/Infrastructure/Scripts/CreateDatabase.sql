@@ -1,0 +1,5 @@
+﻿USE master
+
+DROP DATABASE IF EXISTS app2md
+
+CREATE DATABASE app2md

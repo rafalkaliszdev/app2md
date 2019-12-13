@@ -1,0 +1,39 @@
+﻿@model ContactFormViewModel
+@{
+    ViewData["Title"] = "Contact Form";
+}
+
+<th:form asp-controller="Main" asp-action="ContactForm" method="post">
+    <th:div asp-validation-summary="All" class="text-danger"></th:div>
+    <div class="form-group">
+        <th:label asp-for="FirstName" class="control-label"></th:label>
+        <th:input asp-for="FirstName" class="form-control" />
+        <th:span asp-validation-for="FirstName" class="text-danger"></th:span>
+    </div>
+    <div class="form-group">
+        <th:label asp-for="LastName" class="control-label"></th:label>
+        <th:input asp-for="LastName" class="form-control" />
+        <th:span asp-validation-for="LastName" class="text-danger"></th:span>
+    </div>
+    <div class="form-group">
+        <th:label asp-for="EmailAddress" class="control-label"></th:label>
+        <th:input asp-for="EmailAddress" class="form-control" />
+        <th:span asp-validation-for="EmailAddress" class="text-danger"></th:span>
+    </div>
+    <div class="form-group">
+        <th:label asp-for="PhoneNumber" class="control-label"></th:label>
+        <th:input asp-for="PhoneNumber" class="form-control" />
+        <th:span asp-validation-for="PhoneNumber" class="text-danger"></th:span>
+    </div>
+    <div class="form-group">
+        <th:label asp-for="AreaOfInterests" class="control-label"></th:label>
+        <th:select asp-for="AreaOfInterests" class="form-control" asp-items="ViewBag.AvailableInterests"></th:select>
+        <th:span asp-validation-for="AreaOfInterests" class="text-danger"></th:span>
+    </div>
+    <div class="form-group">
+        <th:label asp-for="Message" class="control-label"></th:label>
+        <th:textarea asp-for="Message" placeholder="your message" class="form-control"></th:textarea>
+        <th:span asp-validation-for="Message" class="text-danger"></th:span>
+    </div>
+    <input type="submit" value="Submit" class="btn btn-primary">
+</th:form>

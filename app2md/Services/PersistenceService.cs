@@ -1,25 +1,40 @@
-﻿using app2md.Models;
+﻿using app2md.Enums;
+using app2md.Models;
 using Microsoft.Extensions.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 
 namespace app2md.Services
 {
-    public static class PersistenceService
+    public class PersistenceService : IPersistenceService
     {
-        public static int InsertAndReturnID(ContactFormViewModel model, IConfiguration configuration)
+        private readonly IConfiguration configuration;
+
+        public PersistenceService(IConfiguration configuration)
+        {
+            this.configuration = configuration;
+        }
+
+        public int InsertAndFetchId(ContactFormViewModel model)
         {
             try
             {
-                var connectionString = configuration.GetConnectionString("DatabaseConnection");
                 var command =
-                    $"INSERT INTO ContactForm (FirstName, LastName, EmailAddress, PhoneNumber, AreaOfInterests, Message1) " +
-                    $"VALUES ('{model.FirstName}', '{model.LastName}', '{model.EmailAddress}', '{model.PhoneNumber}', '{model.AreaOfInterests}', '{model.Message}')";
+                    "INSERT INTO ContactForm (FirstName, LastName, EmailAddress, PhoneNumber, AreaOfInterests, Message1) " +
+                    "VALUES (@FirstName, @LastName, @EmailAddress, @PhoneNumber, @AreaOfInterests, @Message)";
 
-                using (var sqlConnection = new SqlConnection(connectionString))
+                using (var sqlConnection = new SqlConnection(configuration.GetConnectionString("DatabaseConnection")))
                 using (SqlCommand sqlCommand = new SqlCommand(command, sqlConnection))
                 {
                     sqlConnection.Open();
+
+                    sqlCommand.Parameters.AddWithValue("@FirstName", model.FirstName);
+                    sqlCommand.Parameters.AddWithValue("@LastName", model.LastName);
+                    sqlCommand.Parameters.AddWithValue("@EmailAddress", model.EmailAddress);
+                    sqlCommand.Parameters.AddWithValue("@PhoneNumber", model.PhoneNumber);
+                    sqlCommand.Parameters.AddWithValue("@AreaOfInterests", model.AreaOfInterests);
+                    sqlCommand.Parameters.AddWithValue("@Message", model.Message);
+
                     sqlCommand.CommandType = CommandType.Text;
                     sqlCommand.ExecuteNonQuery();
                 }
@@ -28,7 +43,7 @@ namespace app2md.Services
                 // use scalar for performance
                 int lastRecordID = default;
                 string command1 = "SELECT TOP 1 ID FROM ContactForm ORDER BY 1 DESC";
-                using (var sqlConnection = new SqlConnection(connectionString))
+                using (var sqlConnection = new SqlConnection(configuration.GetConnectionString("DatabaseConnection")))
                 using (SqlCommand sqlCommand = new SqlCommand(command1, sqlConnection))
                 {
                     sqlConnection.Open();
@@ -39,8 +54,25 @@ namespace app2md.Services
             }
             catch
             {
-                throw; // here should be logger
+                throw; // logger advised
             }
+        }
+
+        public bool IsNewName(string name, NameType nameType)
+        {
+            string command = $"SELECT TOP 1 [ID] FROM [ContactForm] WHERE [{nameType.ToString()}] LIKE @Name";
+
+            bool isNew = default;
+            using (var sqlConnection = new SqlConnection(configuration.GetConnectionString("DatabaseConnection")))
+            using (SqlCommand sqlCommand = new SqlCommand(command, sqlConnection))
+            {
+                sqlConnection.Open();
+                sqlCommand.Parameters.AddWithValue("@Name", name);
+                sqlCommand.CommandType = CommandType.Text;
+                isNew = sqlCommand.ExecuteScalar() == null ? true : false;
+            }
+
+            return isNew;
         }
     }
 }

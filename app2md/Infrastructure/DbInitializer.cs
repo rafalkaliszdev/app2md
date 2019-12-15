@@ -22,10 +22,9 @@ namespace app2md.Infrastructure
             if (!dbExists)
             {
                 CreateDatabase();
-                CreateTables();
+                CreateTable();
                 //CreateStoredProcedure();
             }
-
         }
 
         private static bool DatabaseExists(string databaseName)
@@ -58,7 +57,7 @@ namespace app2md.Infrastructure
                 command.ExecuteNonQuery();
             }
         }
-        private static void CreateTables()
+        private static void CreateTable()
         {
             var script = GetScript("CreateTable.sql");
             using (var sqlConnection = new SqlConnection(_dbConnectionString))

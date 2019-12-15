@@ -11,10 +11,17 @@ namespace app2md.Controllers
     public class MainController : Controller
     {
         private readonly IConfiguration configuration;
+        private readonly IPersistenceService persistenceService;
+        private readonly IEmailService emailService;
 
-        public MainController(IConfiguration configuration)
+        public MainController(
+            IConfiguration configuration,
+            IPersistenceService persistenceService,
+            IEmailService emailService)
         {
             this.configuration = configuration;
+            this.persistenceService = persistenceService;
+            this.emailService = emailService;
         }
 
         [HttpGet]
@@ -30,8 +37,8 @@ namespace app2md.Controllers
         {
             if (ModelState.IsValid)
             {
-                var contactFormId = PersistenceService.InsertAndReturnID(model, configuration);
-                EmailService.SendMail(model, contactFormId, configuration);
+                var contactFormId = persistenceService.InsertAndFetchId(model);
+                emailService.SendMail(model, contactFormId);
                 return View("ThankYou", contactFormId);
             }
 
@@ -42,23 +49,12 @@ namespace app2md.Controllers
 
         public IActionResult ValidateFirstName(string firstName)
         {
-            return Json(HasOnlyAcceptedLetters(firstName));
+            return Json(persistenceService.IsNewName(firstName, NameType.FirstName));
         }
 
         public IActionResult ValidateLastName(string lastName)
         {
-            return Json(HasOnlyAcceptedLetters(lastName));
-        }
-
-        [NonAction]
-        private bool HasOnlyAcceptedLetters(string name)
-        {
-            // quick example of remote validation 
-            // in real life there would be check against database
-
-            // arbitrally I do not accept "xvc" letters
-            var hasBannedLetters = Regex.IsMatch(name, "[xv]");
-            return !hasBannedLetters;
+            return Json(persistenceService.IsNewName(lastName, NameType.LastName));
         }
     }
 }

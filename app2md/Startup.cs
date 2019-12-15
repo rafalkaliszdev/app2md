@@ -1,3 +1,4 @@
+using app2md.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -19,6 +20,10 @@ namespace app2md
         {
             services.AddControllersWithViews();
             services.AddHttpContextAccessor();
+
+            services.AddScoped<IPersistenceService, PersistenceService>();
+            services.AddScoped<IEmailService, EmailService>();
+
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

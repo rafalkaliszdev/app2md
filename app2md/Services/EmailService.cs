@@ -6,9 +6,16 @@ using System.Net.Mail;
 
 namespace app2md.Services
 {
-    public static class EmailService
+    public class EmailService : IEmailService
     {
-        public static void SendMail(ContactFormViewModel model, int contactFormId, IConfiguration configuration)
+        private readonly IConfiguration configuration;
+
+        public EmailService(IConfiguration configuration)
+        {
+            this.configuration = configuration;
+        }
+
+        public void SendMail(ContactFormViewModel model, int contactFormId)
         {
             try
             {
@@ -36,7 +43,7 @@ namespace app2md.Services
             }
             catch
             {
-                throw; // here should be logger
+                throw; // logger advised
             }
         }
     }

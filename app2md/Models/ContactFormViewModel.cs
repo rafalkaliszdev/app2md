@@ -8,13 +8,13 @@ namespace app2md.Models
     {
         [Required]
         [DisplayName("First Name")]
-        [Remote("ValidateFirstName", "Main", ErrorMessage = "The first name must not have banned letters of: x,v")]
+        [Remote("ValidateFirstName", "Main", ErrorMessage = "The first name is already taken")]
 
         public string FirstName { get; set; }
 
         [Required]
         [Display(Name = "Last Name")]
-        [Remote("ValidateLastName", "Main", ErrorMessage = "The last name must not have banned letters of: x,v")]
+        [Remote("ValidateLastName", "Main", ErrorMessage = "The last name is already taken")]
         public string LastName { get; set; }
 
         [Required]
